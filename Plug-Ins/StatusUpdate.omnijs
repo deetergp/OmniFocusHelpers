@@ -1,0 +1,31 @@
+/*{
+    "author": "Scott Deeter",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.mycompany.StatusUpdate",
+    "version": "0.1",
+    "description": "Create an allocations-friendly 10am status update",
+    "label": "StatusUpdate",
+    "mediumLabel": "StatusUpdate",
+    "paletteLabel": "StatusUpdate",
+}*/
+(() => {
+    'use strict';
+    
+    var action = new PlugIn.Action(() => {
+    const tasks = tagNamed('10am').availableTasks.sort((task) => {
+        return task.containingProject.tags.map(tag => tag.name).includes('OOH') ? -1 : 1;
+    }).sort((task) => {
+        return task.containingProject.tags.map(tag => tag.name).includes('R&D') ? -1 : 1;
+    }).map((task) => {
+        return task.containingProject.tags.map(tag => tag.name).includes('OOH')
+            ? `- ${task.name} [${task.containingProject.name}]`
+            : `- ${task.name}`;
+    });
+
+    console.log(`10am Status\n${tasks.join('\n')}`);
+    return `10am Status\n${tasks.join('\n')}`;
+    });
+
+    return action;
+})();
