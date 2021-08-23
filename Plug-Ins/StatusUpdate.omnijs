@@ -32,14 +32,10 @@
         }).sort((task) => {
             return task.containingProject.tags.map(tag => tag.name).includes('R&D') ? -1 : 1;
         }).map((task) => {
-            return {
-                taskName: `${task.name}${getFormattedGithubLink(task.note)}`,
-                task,
-            }
-        }).map((task) => {
-            return task.task.containingProject.tags.map(tag => tag.name).includes('OOH')
-                ? `- ${task.taskName} [${task.task.containingProject.name}]`
-                : `- ${task.taskName}`;
+            const taskName = `${task.name}${getFormattedGithubLink(task.note)}`;
+            return task.containingProject.tags.map(tag => tag.name).includes('OOH')
+                ? `- ${taskName} [${task.containingProject.name}]`
+                : `- ${taskName}`;
         });
 
         return `10am Status\n${tasks.join('\n')}`;
