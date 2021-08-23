@@ -16,14 +16,14 @@
         if (!taskNote.startsWith('http')) {
             return '';
         }
-    
+
         // We only want to concern ourselves with Github links.
         const linkParts = taskNote.split('/');
         if (!linkParts[2].endsWith('github.com')) {
             return '';
         }
 
-        return ` (<a href="${taskNote}" target="_blank">${linkParts[4]} ${linkParts[5] === 'pull' ? 'PR' : ''}#${linkParts[6].split('#')[0]}</a>)`;
+        return ` ([${linkParts[4]} ${linkParts[5] === 'pull' ? 'PR' : ''}#${linkParts[6].split('#')[0]}](${taskNote}))`;
     }
 
     const get10amUpdateMessage = () => {
