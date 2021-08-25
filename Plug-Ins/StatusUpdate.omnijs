@@ -30,9 +30,13 @@
 
     const get10amUpdateMessage = () => {
         const tasks = tagNamed('10am').availableTasks.sort((task) => {
-            return !task.containingProject.tags.map(tag => tag.name).includes('CoR') ? -1 : 1;
-        }).sort((task) => {
-            return task.containingProject.tags.map(tag => tag.name).includes('R&D') ? -1 : 1;
+            if (task.containingProject.tags.map(tag => tag.name).includes('R&D')) {
+                return -1;
+            }
+            if (task.containingProject.tags.map(tag => tag.name).includes('CoR')) {
+                return 1;
+            }
+            return 0;
         }).map((task) => {
             const taskName = `${task.name}${getFormattedGithubLink(task.note)}`;
             return !task.containingProject.tags.map(tag => tag.name).includes('CoR')
