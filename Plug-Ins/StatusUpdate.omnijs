@@ -16,24 +16,26 @@
         if (!taskNote.startsWith('http')) {
             return '';
         }
-
-        // We only want to concern ourselves with Github links.
         const linkParts = taskNote.split('/');
-        if (!linkParts[2].endsWith('github.com')) {
-            return '';
+        const urlRoot = linkParts[2]
+        if (urlRoot.endsWith('github.com')) {
+            return ` ([${linkParts[4]} ${linkParts[5] === 'pull' ? 'PR' : ''}#${linkParts[6].split('#')[0]}](${taskNote}))`;
+        }
+        if (urlRoot.startsWith('docs.google')) {
+            return ` ([Doc](${taskNote}))`;
         }
 
-        return ` ([${linkParts[4]} ${linkParts[5] === 'pull' ? 'PR' : ''}#${linkParts[6].split('#')[0]}](${taskNote}))`;
+        return '';
     }
 
     const get10amUpdateMessage = () => {
         const tasks = tagNamed('10am').availableTasks.sort((task) => {
-            return task.containingProject.tags.map(tag => tag.name).includes('OOH') ? -1 : 1;
+            return !task.containingProject.tags.map(tag => tag.name).includes('CoR') ? -1 : 1;
         }).sort((task) => {
             return task.containingProject.tags.map(tag => tag.name).includes('R&D') ? -1 : 1;
         }).map((task) => {
             const taskName = `${task.name}${getFormattedGithubLink(task.note)}`;
-            return task.containingProject.tags.map(tag => tag.name).includes('OOH')
+            return !task.containingProject.tags.map(tag => tag.name).includes('CoR')
                 ? `- ${taskName} [${task.containingProject.name}]`
                 : `- ${taskName}`;
         });
