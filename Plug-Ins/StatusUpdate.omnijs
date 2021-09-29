@@ -31,8 +31,9 @@
     const get10amUpdateMessage = () => {
         const tasks = tagNamed('10am').availableTasks.map((task) => {
             const taskName = `${task.name}${getFormattedLink(task.note)}`;
+            const estimatedHours = task.estimatedMinutes ? task.estimatedMinutes / 60 : '';
             return !task.containingProject.tags.map(tag => tag.name).includes('CoR')
-                ? `- ${taskName} [${task.containingProject.name}]`
+                ? `- ${taskName} [${task.containingProject.name} - ${estimatedHours}]`
                 : `- ${taskName}`;
         });
 
