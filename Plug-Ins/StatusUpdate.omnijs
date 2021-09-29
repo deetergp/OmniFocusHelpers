@@ -29,15 +29,7 @@
     }
 
     const get10amUpdateMessage = () => {
-        const tasks = tagNamed('10am').availableTasks.sort((task) => {
-            if (task.containingProject.tags.map(tag => tag.name).includes('R&D')) {
-                return -1;
-            }
-            if (task.containingProject.tags.map(tag => tag.name).includes('CoR')) {
-                return 1;
-            }
-            return 0;
-        }).map((task) => {
+        const tasks = tagNamed('10am').availableTasks.map((task) => {
             const taskName = `${task.name}${getFormattedLink(task.note)}`;
             return !task.containingProject.tags.map(tag => tag.name).includes('CoR')
                 ? `- ${taskName} [${task.containingProject.name}]`
