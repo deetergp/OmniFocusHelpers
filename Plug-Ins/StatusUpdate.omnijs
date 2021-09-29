@@ -12,7 +12,7 @@
 (() => {
     'use strict';
 
-    const getFormattedGithubLink = (taskNote) => {
+    const getFormattedLink = (taskNote) => {
         if (!taskNote.startsWith('http')) {
             return '';
         }
@@ -22,7 +22,7 @@
             return ` ([${linkParts[4]} ${linkParts[5] === 'pull' ? 'PR' : ''}#${linkParts[6].split('#')[0]}](${taskNote}))`;
         }
         if (urlRoot.startsWith('docs.google')) {
-            return ` ([Doc](${taskNote}))`;
+            return ` ([doc](${taskNote}))`;
         }
 
         return '';
@@ -38,7 +38,7 @@
             }
             return 0;
         }).map((task) => {
-            const taskName = `${task.name}${getFormattedGithubLink(task.note)}`;
+            const taskName = `${task.name}${getFormattedLink(task.note)}`;
             return !task.containingProject.tags.map(tag => tag.name).includes('CoR')
                 ? `- ${taskName} [${task.containingProject.name}]`
                 : `- ${taskName}`;
