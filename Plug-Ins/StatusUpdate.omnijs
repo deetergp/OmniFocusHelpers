@@ -17,6 +17,11 @@
      */
     const OOH_COST_CENTERS = ['R&D', 'G&A'];
 
+    /**
+     * The default amount of time it takes for an OOH task.
+     */
+    const DEFAULT_TASK_DURATION_HOURS = 2;
+
     const getFormattedLink = (taskNote) => {
         if (!taskNote.startsWith('http')) {
             return '';
@@ -36,7 +41,7 @@
     const get10amUpdateMessage = () => {
         const tasks = tagNamed('10am').availableTasks.map((task) => {
             const taskName = `${task.name}${getFormattedLink(task.note)}`;
-            const estimatedHours = task.estimatedMinutes ? task.estimatedMinutes / 60 : 1;
+            const estimatedHours = task.estimatedMinutes ? task.estimatedMinutes / 60 : DEFAULT_TASK_DURATION_HOURS;
             const costCenter = getCostCenter(task);
             return costCenter !== 'CoR' ? `- ${taskName} [${costCenter} - ${estimatedHours}]` : `- ${taskName}`;
         });
