@@ -12,16 +12,14 @@
 (() => {
     'use strict';
 
-    /**
-     * Out of home cost centers for me.
-     */
     const OOH_COST_CENTERS = ['R&D', 'G&A'];
-
-    /**
-     * The default amount of time it takes for an OOH task.
-     */
     const DEFAULT_TASK_DURATION_HOURS = 2;
 
+    /**
+     * @param {String} taskNote The notes saved to an OmniFocus task
+     *
+     * @returns {String} Contextual information to be added to 10am messages
+     */
     const getFormattedLink = (taskNote) => {
         if (!taskNote.startsWith('http')) {
             return '';
@@ -38,6 +36,9 @@
         return '';
     }
 
+    /**
+     * @returns {String} A list of format formatted OmniFocus task names & notes for a 10am status update
+     */
     const get10amUpdateMessage = () => {
         const tasks = tagNamed('10am').availableTasks.map((task) => {
             const taskName = `${task.name}${getFormattedLink(task.note)}`;
