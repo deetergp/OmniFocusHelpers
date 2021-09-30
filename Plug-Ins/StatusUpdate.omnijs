@@ -12,6 +12,11 @@
 (() => {
     'use strict';
 
+    /**
+     * Out of home cost centers for me.
+     */
+    const OOH_COST_CENTERS = ['R&D', 'G&A'];
+
     const getFormattedLink = (taskNote) => {
         if (!taskNote.startsWith('http')) {
             return '';
@@ -32,15 +37,65 @@
         const tasks = tagNamed('10am').availableTasks.map((task) => {
             const taskName = `${task.name}${getFormattedLink(task.note)}`;
             const estimatedHours = task.estimatedMinutes ? task.estimatedMinutes / 60 : 1;
-
-            // Cost centers are differentiated by folders in OmniFocus.
-            const costCenter = task.containingProject.parentFolder.name;
-            return costCenter !== 'CoR'
-                ? `- ${taskName} [${costCenter} - ${estimatedHours}]`
-                : `- ${taskName}`;
+            const costCenter = getCostCenter(task);
+            return costCenter !== 'CoR' ? `- ${taskName} [${costCenter} - ${estimatedHours}]` : `- ${taskName}`;
         });
 
         return `10am Status\n${tasks.join('\n')}`;
+    }
+
+    /**
+     * Search Folder, parent project, and task for tags that match a cost center.
+     *
+     * @param {Object} task An OmniFocus task object
+     *
+     * @returns {String} a cost center name
+     */
+    const getCostCenter = (task) => {
+        // Check task tags
+        if (task.tags) {
+            const taskTagName = searchTags(task.tags);
+            if (taskTagName) {
+                return taskTagName;
+            }
+        }
+
+        // Check parent project tags
+        if (task.containingProject.tags) {
+            const containingProjectTag = searchTags(task.containingProject.tags);
+            if (containingProjectTag) {
+                return containingProjectTag;
+            }
+        }
+
+        // Check containing folder
+        if (task.containingProject.parentFolder.name) {
+            const parentFolderName = task.containingProject.parentFolder.name;
+            if (OOH_COST_CENTERS.includes(parentFolderName)) {
+                return parentFolderName;
+            }
+        }
+
+        return 'CoR';
+    }
+
+    /**
+     * Iterate over an array of tags to see if one is an OOH cost center.
+     *
+     * @param {Array} tags An array of OmniFocus tags
+     *
+     * @return {String} matching tag name or blank
+     */
+    const searchTags = (tags) => {
+        let tagName = '';
+        tags.some(tag => {
+            if (OOH_COST_CENTERS.includes(tag.name)) {
+                tagName = tag.name;
+                return true;
+            }
+        });
+
+        return tagName;
     }
 
     var action = new PlugIn.Action(() => {
