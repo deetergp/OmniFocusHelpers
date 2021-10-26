@@ -20,7 +20,8 @@
      *
      * @returns {String} Contextual information to be added to 10am messages
      */
-    const getFormattedLink = (taskNote) => {
+    const getFormattedLink = (task) => {
+        const taskNote = task.note || task.containingProject.note;
         if (!taskNote.startsWith('http')) {
             return '';
         }
@@ -41,7 +42,7 @@
      */
     const get10amUpdateMessage = () => {
         const tasks = tagNamed('10am').availableTasks.map((task) => {
-            const taskName = `${task.name}${getFormattedLink(task.note)}`;
+            const taskName = `${task.name}${getFormattedLink(task)}`;
             const estimatedHours = task.estimatedMinutes ? task.estimatedMinutes / 60 : DEFAULT_TASK_DURATION_HOURS;
             const costCenter = getCostCenter(task);
             return costCenter !== 'CoR' ? `- ${taskName} [${costCenter} - ${estimatedHours}]` : `- ${taskName}`;
