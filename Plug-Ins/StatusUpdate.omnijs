@@ -21,7 +21,7 @@
      * @returns {String} Contextual information to be added to 10am messages
      */
     const getFormattedLink = (task) => {
-        const taskNote = task.note || task.containingProject.note;
+        const taskNote = task.note || task.containingProject.note || '';
         if (!taskNote.startsWith('http')) {
             return '';
         }
