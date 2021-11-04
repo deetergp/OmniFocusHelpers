@@ -12,7 +12,7 @@
 (() => {
     'use strict';
 
-    const OOH_COST_CENTERS = ['R&D', 'G&A'];
+    const OOH_COST_CENTERS = ['R&D', 'G&A', 'S&M'];
     const DEFAULT_TASK_DURATION_HOURS = 2;
 
     /**
